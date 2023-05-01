@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        {% block head %}
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <script src="https://kit.fontawesome.com/d5b6c3e86b.js" crossorigin="anonymous"></script>
+
+        {% block styles %}
+            {{ bootstrap.load_css() }}
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Condensed&family=Ubuntu+Mono:ital,wght@0,700;1,700&family=Ubuntu:ital,wght@0,500;0,700;1,500;1,700&family=VT323&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        {% endblock %}
+
+        <title>{{ title }}</title>
+        {% endblock %}
+    </head>
+
+    <body>
+        {% block content %}
+            <div class="container-md">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
+
+                {% block page_content %}
+                {% endblock %}
+
+        {% endblock %}
+        {% block scripts %}
+            {{ bootstrap.load_js() }}
+            <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+            <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        {% endblock %}
+    </body>
+</html>

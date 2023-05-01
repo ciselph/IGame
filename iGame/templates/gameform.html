@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% import "bootstrap5/form.html" as wtf %}
+
+{% block content %}
+    {% include 'nav.html' %}
+    {{ super() }}
+{% endblock %}
+{% block page_content %}
+    <div class="container-md p-3 rounded-3" style="color:#F7E9AD;background-color:#3B3B3B;border-style:dotted;outline:dashed #F7726F;">
+    <h1 class="display-4" style="font-family:VT323;color:#A8F788;">Welcome to iGame!</h1>
+        <p class="lead" style="color:#F7E9AD;"><em>First, we need more info about which games you like or not.</em></p>
+        <p style="color:#F7E9AD;"><span class="fa-solid fa-list-ol fs-1 p-2" style="vertical-align:middle;">
+</span>Search and select 3 games you like & 2 you don't like.</p>
+        <p style="color:#F7E9AD;"><span class="fa-solid fa-gamepad fs-1 p-2" style="vertical-align:middle;">
+</span>Confirm platforms.</p>
+        <p style="color:#F7E9AD;"><span class="fa-solid fa-flag-checkered fs-1 p-2" style="vertical-align:middle;">
+</span>Select FINISH.</p>
+        {% if form.errors %}
+            <p>
+                        {% for error in form.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+            </p>
+        {% endif %}
+                <form id="GameForm" action="/gameForm" method="POST" autocomplete="off" novalidate>
+                    {{ form.csrf_token }}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+  <span class="input-group-text fa-solid fa-face-smile-beam" style="color:#C694F7;font-size:200%;" id="game1-name"></span>
+              {{ form.game1(class="form-control-lg", placeholder="1 Game Name") }}
+                            {{ form.game1sel(class="hidden form-select form-select-lg") }}
+</div>
+                          <div class="input-group mb-3">
+  <span class="input-group-text fa-solid fa-face-grin-stars" style="color:#C694F7;font-size:200%;" id="game1-name"></span>
+              {{ form.game2(class="form-control-lg", placeholder="2 Game Name") }}
+                            {{ form.game2sel(class="hidden form-select form-select-lg") }}
+</div>
+                      <div class="input-group mb-3">
+  <span class="input-group-text fa-solid fa-face-smile-beam" style="color:#C694F7;font-size:200%;" id="game1-name"></span>
+              {{ form.game3(class="form-control-lg", placeholder="3 Game Name") }}
+                            {{ form.game3sel(class="hidden form-select form-select-lg") }}
+</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+  <span class="input-group-text fa-solid fa-face-frown-open" style="color:#F7726F;font-size:200%;" id="game1-name"></span>
+              {{ form.game4(class="form-control-lg", placeholder="4 Game Name") }}
+                            {{ form.game4sel(class="hidden form-select form-select-lg") }}
+</div>
+                            <div class="input-group mb-3">
+  <span class="input-group-text fa-solid fa-face-frown-open" style="color:#F7726F;font-size:200%;" id="game1-name"></span>
+              {{ form.game5(class="form-control-lg", placeholder="5 Game Name") }}
+                            {{ form.game5sel(class="hidden form-select form-select-lg") }}
+</div>
+                        </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                        {{ form.submit(class='btn btn-secondary btn-lg') }}
+                        </div>
+                    </div>
+        </form>
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {# considers multiple same game names based on platform #}
+    <script>
+        let game1 = document.getElementById('game1');
+        let game2 = document.getElementById('game2');
+        let game3 = document.getElementById('game3');
+        let game4 = document.getElementById('game4');
+        let game5 = document.getElementById('game5');
+
+        let game1sel = document.getElementById('game1sel');
+        let game2sel = document.getElementById('game2sel');
+        let game3sel = document.getElementById('game3sel');
+        let game4sel = document.getElementById('game4sel');
+        let game5sel = document.getElementById('game5sel');
+
+        game1.onchange = function() {
+             let search1 = game1.value;
+             if (search1) {
+             fetch('/gameForm/' + search1).then(function(response) {
+                 response.json().then(function(data) {
+                     let optionHTML= '';
+                     for (let game of data.games) {
+                         optionHTML += '<option value=' + game.id;
+                         optionHTML += '>' + game.name + ', on: ' + game.platforms + '</option>';
+                     }
+
+                     game1sel.innerHTML = optionHTML;
+                     game1sel.style.display = 'block';
+                 });
+             });} else {
+                 game1sel.style.display = 'none';
+             }
+        }
+        game2.onchange = function() {
+             let search2 = game2.value;
+             if (search2) {
+             fetch('/gameForm/' + search2).then(function(response) {
+                 response.json().then(function(data) {
+                     let optionHTML= '';
+                     for (let game of data.games) {
+                         optionHTML += '<option value=' + game.id;
+                         optionHTML += '>' + game.name + ' on: ' + game.platforms + '</option>';
+                     }
+
+                     game2sel.innerHTML = optionHTML;
+                     game2sel.style.display = 'block';
+                 });
+             });} else {
+                 game2sel.style.display = 'none';
+             }
+        }
+        game3.onchange = function() {
+             let search3 = game3.value;
+             if (search3) {
+             fetch('/gameForm/' + search3).then(function(response) {
+                 response.json().then(function(data) {
+                     let optionHTML= '';
+                     for (let game of data.games) {
+                         optionHTML += '<option value=' + game.id;
+                         optionHTML += '>' + game.name + ' on: ' + game.platforms + '</option>';
+                     }
+
+                     game3sel.innerHTML = optionHTML;
+                     game3sel.style.display = 'block';
+                 });
+             });} else {
+                 game3sel.style.display = 'none';
+             }
+        }
+        game4.onchange = function() {
+             let search4 = game4.value;
+             if (search4) {
+             fetch('/gameForm/' + search4).then(function(response) {
+                 response.json().then(function(data) {
+                     let optionHTML= '';
+                     for (let game of data.games) {
+                         optionHTML += '<option value=' + game.id;
+                         optionHTML += '>' + game.name + ' on: ' + game.platforms + '</option>';
+                     }
+
+                     game4sel.innerHTML = optionHTML;
+                     game4sel.style.display = 'block';
+                 });
+             });} else {
+                 game4sel.style.display = 'none';
+             }
+        }
+         game5.onchange = function() {
+             let search5 = game5.value;
+             if (search5) {
+             fetch('/gameForm/' + search5).then(function(response) {
+                 response.json().then(function(data) {
+                     let optionHTML= '';
+                     for (let game of data.games) {
+                         optionHTML += '<option value=' + game.id;
+                         optionHTML += '>' + game.name + ' on: ' + game.platforms + '</option>';
+                     }
+
+                     game5sel.innerHTML = optionHTML;
+                     game5sel.style.display = 'block';
+                 });
+             });} else {
+                 game5sel.style.display = 'none';
+             }
+        }
+    </script>
+{% endblock %}

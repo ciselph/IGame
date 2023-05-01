@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% import "bootstrap5/form.html" as wtf %}
+
+{% block title %} iGame: Registration {% endblock %}
+
+
+{% block page_content %}
+    <div class="container-md rounded-3" style="color:#F7E9AD;background-color:#3B3B3B;border-style:dotted;outline:dashed #F7726F;">
+    <div class="registration-box">
+        <h1 class="display-1 text-center" style="font-family:VT323;color:#A8F788;">REGISTER ACCT</h1>
+        <div class="registration-body">
+            <form action="/register" id="RegistrationForm" method="POST" autocomplete="off" class="row needs-validation form-signin" novalidate>
+                    {{ form.hidden_tag() }}
+                <div class="col-6">
+                    {% if form.username.errors %}
+                        {% for error in form.username.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.username.label(class="form-label") }}
+                    {{ form.username(class="form-control") }}
+                    <small id="usernameHelp" class="form-text text-muted">Enter a combination of Latin letters A-Z and numbers 0-9.</small>
+                </div>
+                <div class="col-6">
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <div class="alert alert-dark" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control") }}
+                </div>
+
+                <div class="col-6">
+                    {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control", type="password") }}
+                </div>
+                <div class="col-6">
+                    {% if form.password_confirm.errors %}
+                        {% for error in form.password_confirm.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.password_confirm.label(class="form-label") }}
+                    {{ form.password_confirm(class="form-control", type="password") }}
+                </div>
+
+                <div class="col-12">
+                    {% if form.name.errors %}
+                        {% for error in form.name.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-control") }}
+                </div>
+
+                <div class="col-6">
+                    {% if form.bday.errors %}
+                        {% for error in form.bday.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.bday.label(class="form-label") }}
+                    {{ form.bday(class="form-control") }}
+                </div>
+
+                <div class="col-6">
+                    {{ form.zipcode.label(class="form-label") }}
+                    {{ form.zipcode(class="form-control") }}
+                    {% if form.zipcode.errors %}
+                        {% for error in form.zipcode.errors %}
+                            <div class="alert alert-dark" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="col-12">
+                    {% if form.phone.errors %}
+                        {% for error in form.phone.errors %}
+                            <div class="alert alert-dark" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {{ form.phone.label(class="form-label") }}
+                    {{ form.phone(class="form-control") }}
+                </div>
+
+                <div class="col-12 text-center" style="margin-top:20px">
+                    {{ form.submit(class="btn btn-secondary") }}
+                </div>
+                <div class="col-12 text-center" style="margin-top:20px">
+                    Already a member? <a href="{{ url_for('main.index') }}">LOGIN HERE</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% import "bootstrap5/form.html" as wtf %}
+
+{% block page_content %}
+    <div class="h-100 p-5 text-white rounded-3 container-sm" style="background-color:#3B3B3B;">
+
+        <h1 class="display-1" style="color:#A8F788;font-family:VT323;">iGame</h1>
+            <p class="fs-1" style="color:#F7E9AD;font-family:VT323;">game recommendation app</p>
+<div class="row" style="color:#C694F7;">
+    <div class="col-1"></div>
+    <div class="col-11">
+        <div class="d-flex flex-column mb-3">
+  <div class="p-2 fs-5 align-self-start"><span class="fa-solid fa-gamepad fa-bounce fs-1" style="color:#A8F788;vertical-align:middle;"></span>
+            200,000+ games</div>
+  <div class="p-2 fs-5 align-self-end"><span class="fa-solid fa-sliders fa-flip fs-1" style="color:#A8F788;--fa-animation-duration: 3s;vertical-align:middle;"></span>
+            filters for game platform, genre & theme</div>
+  <div class="p-2 fs-5 align-self-start"><span class="fa-solid fa-people-group fa-beat-fade fs-1" style="color:#A8F788;vertical-align:middle;"></span>
+            GOOD FOR all gamers @ all ages</div>
+</div>
+        </div>
+</div>
+        <hr class="border border-5 rounded" style="border-color:red;">
+
+
+        <div class="row"><p class="fs-6" style="color:#F7E9AD;">login or register for more</p></div>
+        <button class="btn btn-secondary btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#loginModal">
+            LOG IN
+        </button>
+    </div>
+    <!--
+    <div class="container vertical-center">
+        <div class="jumbotron jumbotron-my auto">
+            <h1 class="display-4">iGame</h1>
+            <p class="lead">Games for Everybody!</p>
+            <hr class="my-4">
+            <p>Login or register for more.</p>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#loginModal">
+            LOG IN
+            </button>
+        </div>
+    </div>
+    -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalTitle">iGame auth</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/" id="LoginForm" method="POST" autocomplete="off" class="needs-validation form-signin" novalidate>
+                        <div class="form-group">
+                            {{ form.hidden_tag() }}
+                            {{ form.username.label(class="col-sm-2 col-form-label col-form-label-lg") }}
+                            {{ form.username(class="form-control form-control-lg") }}
+                            {% if form.username.errors %}
+                                {% for error in form.username.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.password.label(class="col-sm-2 col-form-label col-form-label-lg") }}
+                            {{ form.password(class="form-control form-control-lg") }}
+                            {% if form.password.errors %}
+                                {% for error in form.password.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                        <div class="form-check">
+                            {{ form.remember(class="form-check-input") }} &nbsp;
+                            {{ form.remember.label(class="form-check-label") }}
+                        </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-secondary" style="margin-top:10px">LOG IN</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12">
+                        New to iGame? <a href="{{ url_for('main.register') }}">REGISTER HERE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

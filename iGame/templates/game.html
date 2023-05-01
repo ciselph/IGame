@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% include 'nav.html' %}
+{% block page_content %}
+        <div class="row mt-4">
+
+            <div class="game">
+                <div class="card text-center mb-3" style="width: 18rem;">
+                    <div class="card-body">
+                        <img src="{{ cover_url }}" alt="Cover for {{ name }}">
+                        <h5 class="card-title">{{ name }}</h5>
+                        <p class="card-text">
+                            {% if platforms %}
+                                <b>Platforms:</b> {{ platforms }}<br>
+                            {% endif %}
+                            {% if modes %}
+                                <b>Modes:</b> {{ modes }}<br>
+                            {% endif %}
+                            {% if genres %}
+                                <b>Genres:</b> {{ genres }}<br>
+                            {% endif %}
+                            {% if themes %}
+                                <b>Themes:</b> {{ themes }}<br>
+                            {% endif %}
+                            {% if rating %}
+                                <b>Gamer Rating:</b> {{ rating }}
+                            {% endif %}
+                        <button type="button" class="btn btn-secondary btn-md" data-toggle="modal" data-target="#gameinfoModal">
+                            Read More?
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="gameinfoModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="gameTitle">{{ name }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {% if age_sum %}
+                                <b>Content Description:</b> {{ age_sum }}<br><br>
+                            {% endif %}
+                            {% if sum %}
+                                <b>Description:</b> {{ sum }}<br><br>
+                            {% endif %}
+                            {% if story %}
+                                <b>Storyline:</b> {{ story }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+{% endblock %}

@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'nav.html' %}
+    {{ super() }}
+{% endblock %}
+{% block page_content %}
+    <div class="container-md p-3 rounded-3" style="color:#F7E9AD;background-color:#3B3B3B;border-style:dotted;outline:dashed #F7726F;">
+        <div class="gamefinder-head">
+            <h1 class="display-4"><strong>Game Finder</strong></h1>
+            <p class="lead">Use the filters to find game recommendations and add them to your bag.</p>
+        <form method="POST" action="/gameFinder" autocomplete="off">
+        <div class="btn-group btn-group-lg">
+            <div class="dropdown" id="platformCategories">
+
+                <div class="btn-group-lg">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="platCatDropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Platform Categories
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% for platformCat in platformCategories %}
+                        <a class="dropdown-item" href="#">
+                        <div class="form-check"><input class="form-check-input" type="checkbox" id="{{ platformCat[1] }}" value="{{ platformCat[0] }}" name="platformCat"/>
+                        <label class="form-check-label" for="{{ platformCat[1] }}">{{ platformCat[1] }}</label>
+                        </div>
+                        </a>
+                    {% endfor %}
+                </div>
+                </div>
+
+            </div>
+            <div class="dropdown" id="platformFamilies">
+
+                <div class="btn-group-lg">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="platFamDropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Platform Families
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% for platformFam in platformFamilies %}
+                        <a class="dropdown-item" href="#">
+                        <div class="form-check"><input class="form-check-input" type="checkbox" id="{{ platformFam[1] }}" value="{{ platformFam[0] }}" name="platformFam"/>
+                        <label class="form-check-label" for="{{ platformFam[1] }}">{{ platformFam[1] }}</label>
+                        </div>
+                        </a>
+                    {% endfor %}
+                </div>
+                </div>
+
+            </div>
+            <div class="dropdown" id="themes">
+            <div class="btn-group-lg">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="themesDropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Themes
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% for theme in themes %}
+                        <a class="dropdown-item" href="#">
+                        <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ theme[0] }}" id="{{ theme[1] }}" name="theme"/>
+                        <label class="form-check-label" for="{{ theme[1] }}">{{ theme[1] }}</label>
+                        </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            </div>
+            <div class="dropdown" id="genres">
+            <div class="btn-group-lg">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="genresDropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Genres
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% for genre in genres %}
+                        <a class="dropdown-item" href="#">
+                        <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ genre[0] }}" id="{{ genre[1] }}" name="genre"/>
+                        <label class="form-check-label" for="{{ genre[1] }}">{{ genre[1] }}</label>
+                        </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            </div>
+            <div class="dropdown" id="modes">
+            <div class="btn-group-lg">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="modesDropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Game Modes
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% for mode in modes %}
+                        <a class="dropdown-item" href="#">
+                        <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ mode[0] }}" id="{{ mode[1] }}" name="mode"/>
+                        <label class="form-check-label" for="{{ mode[1] }}">{{ mode[1] }}</label>
+                        </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            </div>
+
+            <div class="refresh">
+                <div class="btn-group-lg">
+            <button class="btn btn-secondary" type="submit" id="recommend-refresh">
+                Refresh
+            </button>
+                </div>
+            </div>
+        </div>
+        </form>
+        </div>
+
+        <div class="row g-3 justify-content-between">
+            {% if games %}
+                {% for game in games %}
+                    <div class="col-md-2 mb-3 mb-sm-0">
+                        <div class="card h-100">
+                            <img src="{{ game.cover_url }}" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ game.name }}</h5>
+                                <p class="card-text">User Rating: {{ game.rating }}</p>
+                                <p class="card-text">{{ game.sum }}</p>
+                                <button type="button" id="{{ game.id }}" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#gameinfoModal" onClick="Nfo_click(this.id)">
+                                Read More?
+                                </button>
+                                <button type="button" class="btn btn-link btn-sm">
+                                    <a href="/add/{{ game.id }}">Add to Bag</a>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p><em>No games :(</em> Try filtering some game attributes.</p>
+            {% endif %}
+        </div>
+
+            <div class="modal fade" id="gameinfoModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="gameTitle">
+                                <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="gamePlatforms"></p>
+                            <p id="gameModes"></p>
+                            <p id="gameGenres"></p>
+                            <p id="gameThemes"></p>
+                            <p id="gameRating"></p>
+                            <p id="gameStory"></p>
+                            <p id="gameSum"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        let gameTitle = document.getElementById('gameTitle');
+        let gamePlatforms = document.getElementById('gamePlatforms');
+        let gameModes = document.getElementById('gameModes');
+        let gameGenres = document.getElementById('gameGenres');
+        let gameThemes = document.getElementById('gameThemes');
+        let gameRating = document.getElementById('gameRating');
+        let gameStory = document.getElementById('gameStory');
+        let gameSum = document.getElementById('gameSum');
+
+        const buttons = document.querySelectorAll('.btn btn-secondary btn-md');
+
+        function Nfo_click(id_) {
+            console.log(id_)
+            let search1 = id_;
+            if (search1) {
+                fetch('/gameFinder/' + search1).then(function(response) {
+                    response.json().then(function(data) {
+                            gameTitle.innerHTML = data.gameInfo.name;
+                            gamePlatforms.innerHTML = data.gameInfo.platforms;
+                            gameModes.innerHTML = data.gameInfo.modes;
+                            gameGenres.innerHTML = data.gameInfo.genres;
+                            gameThemes.innerHTML = data.gameInfo.themes;
+                            gameRating.innerHTML = data.gameInfo.rating;
+                            gameStory.innerHTML = data.gameInfo.story;
+                            gameSum.innerHTML = data.gameInfo.sum;
+                    });
+                });
+            }
+        }
+
+    </script>
+{% endblock %}

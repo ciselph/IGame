@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% import "bootstrap5/form.html" as wtf %}
+
+{% block content %}
+    {% include 'nav.html' %}
+                <div class="modal fade" id="gameinfoModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="gameTitle">
+                                <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="gamePlatforms"></p>
+                            <p id="gameModes"></p>
+                            <p id="gameGenres"></p>
+                            <p id="gameThemes"></p>
+                            <p id="gameRating"></p>
+                            <p id="gameStory"></p>
+                            <p id="gameSum"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {{ super() }}
+    {% endblock %}
+{% block page_content %}
+    <div class="container-md rounded-3" style="color:#F7E9AD;background-color:#3B3B3B;border-style:dotted;outline:dashed #F7726F;">
+    <!-- wrap delete icon in link to delete from bag
+    will need: game name, avg rating, user rating,
+    -->
+    <h1 class="display-5" style="font-family:VT323;">IN YOUR BAG:</h1>
+    <table class="table table-borderless table-sm table-hover">
+        <thead class="fs-4" style="font-family:VT323;color:#A8F788;">
+            <tr>
+                <th scope="col" class="col-1 text-center">
+            </th>
+                <th scope="col" class="col-3"><span class="fa-solid fa-arrow-down-a-z p-1" style="color:#A8F788;vertical-align:middle;">
+</span>NAME</th>
+                <th scope="col" class="col-2 text-center">GAME INFO</th>
+                <th scope="col" class="col-3 text-center"><span class="fa-solid fa-user p-1" style="color:#A8F788;vertical-align: middle;">
+</span>RATING</th>
+
+        </tr>
+        </thead>
+    <tbody>
+    {% for game in games %}
+    <tr>
+    <td class="text-center fs-5">
+        <a href="/delete/{{ game.game_id }}">
+        <span class="fa-solid fa-trash" style="color:#C694F7;vertical-align:middle;">
+</span>
+        </a>
+    </td>
+        <td style="vertical-align:middle;">
+            {{ game.game_name }}
+        </td>
+        <td class="text-center fs-4" style="vertical-align:middle;">
+            <a href="#" id="{{ game.game_id }}" data-bs-toggle="modal" data-bs-target="#gameinfoModal" onClick="Nfo_click(this.id)">
+                                <span class="fa-solid fa-circle-info" style="color:#C694F7;vertical-align:middle;">
+</span>
+                            </a>
+        </td>
+    <td class="text-center" style="vertical-align:middle;">
+        {% if game.rating %}
+            {{ game.rating }}
+        {% else %}
+            <form action="/rate/{{ game.game_id }}" method="POST">
+                {{ form.hidden_tag() }}
+                {{ form.gameRating() }}
+                {{ form.submit() }}
+            </form>
+        {% endif %}
+    </td>
+
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        let gameTitle = document.getElementById('gameTitle');
+        let gamePlatforms = document.getElementById('gamePlatforms');
+        let gameModes = document.getElementById('gameModes');
+        let gameGenres = document.getElementById('gameGenres');
+        let gameThemes = document.getElementById('gameThemes');
+        let gameRating = document.getElementById('gameRating');
+        let gameStory = document.getElementById('gameStory');
+        let gameSum = document.getElementById('gameSum');
+
+        const buttons = document.querySelectorAll('.btn btn-secondary btn-md');
+
+        function Nfo_click(id_) {
+            let search1 = id_;
+            if (search1) {
+                fetch('/gameFinder/' + search1).then(function(response) {
+                    response.json().then(function(data) {
+                            gameTitle.innerHTML = data.gameInfo.name;
+                            gamePlatforms.innerHTML = data.gameInfo.platforms;
+                            gameModes.innerHTML = data.gameInfo.modes;
+                            gameGenres.innerHTML = data.gameInfo.genres;
+                            gameThemes.innerHTML = data.gameInfo.themes;
+                            gameRating.innerHTML = data.gameInfo.rating;
+                            gameStory.innerHTML = data.gameInfo.story;
+                            gameSum.innerHTML = data.gameInfo.sum;
+                    });
+                });
+            }
+        }
+
+    </script>
+{% endblock %}

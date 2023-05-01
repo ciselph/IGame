@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'nav.html' %}
+
+                <div class="modal fade" id="gameinfoModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="gameTitle">
+                                <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="gamePlatforms"></p>
+                            <p id="gameModes"></p>
+                            <p id="gameGenres"></p>
+                            <p id="gameThemes"></p>
+                            <p id="gameRating"></p>
+                            <p id="gameStory"></p>
+                            <p id="gameSum"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {{ super() }} <!-- super() includes call for error message display -->
+{% endblock %}
+
+{% block page_content %}
+    <div class="container-md p-3 rounded-3 align-self-center" style="color:#F7E9AD;background-color:#3B3B3B;border-style:dotted;outline:dashed #F7726F;">
+        <h1 class="display-6" style="color:#A8F788;">:dashboard recs for {{ current_user.user_name }}</h1>
+        <p class="lead" style="color:#C694F7"><strong><em>based on games in your bag right now!</em></strong></p>
+        <div class="row g-3 justify-content-between">
+            {% with games = top5 %}
+                {% if games %}
+                    {% for game in games %}
+                        <div class="col-md-2 mb-3 mb-sm-0">
+                            <div class="card h-100">
+                                <img src="{{ game.cover_url }}" class="card-img-top">
+                                <div class="card-body">
+                                    <h3 class="card-title" style="font-family:VT323;">{{ game.name }}</h3>
+                                    <p class="card-text lead" style="color:#3b3b3b;">PLATFORMS</p>
+                                    {% for platform in game.platforms %}
+                                        <p class="card-text">{{ platform }}</p>
+                                    {% endfor %}
+                                    <div class="d-flex flex-row mb-2">
+                                        <div class="card-text lead flex-fill" style="color:#3b3b3b;">AVG RATING</div>
+                                        <div class="card-text lead flex-fill align-self-end">{{ game.rating|int }}</div>
+                                    </div>
+                                    <p class="card-text lead" style="color:#3b3b3b;">GENRES</p>
+                                    {% for genre in game.genres %}
+                                        <p class="card-text">{{ genre }}</p>
+                                    {% endfor %}
+                                </div>
+                                <div class="card-footer">
+                                    <a href="#" id="{{ game.id }}" data-bs-toggle="modal" data-bs-target="#gameinfoModal" onClick="Nfo_click(this.id)">
+                                        <span class="fa-solid fa-circle-info" style="color:#735591;vertical-align:middle;"></span></a>
+                                    <a href="/add/{{ game.id }}"><span class="fa-solid fa-circle-plus" style="vertical-align:middle;"></span></a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <p><em>No games :( </em></p>
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        let gameTitle = document.getElementById('gameTitle');
+        let gamePlatforms = document.getElementById('gamePlatforms');
+        let gameModes = document.getElementById('gameModes');
+        let gameGenres = document.getElementById('gameGenres');
+        let gameThemes = document.getElementById('gameThemes');
+        let gameRating = document.getElementById('gameRating');
+        let gameStory = document.getElementById('gameStory');
+        let gameSum = document.getElementById('gameSum');
+
+        const buttons = document.querySelectorAll('.btn btn-secondary btn-md');
+
+        function Nfo_click(id_) {
+            let search1 = id_;
+            if (search1) {
+                fetch('/gameFinder/' + search1).then(function(response) {
+                    response.json().then(function(data) {
+                            gameTitle.innerHTML = data.gameInfo.name;
+                            gamePlatforms.innerHTML = data.gameInfo.platforms;
+                            gameModes.innerHTML = data.gameInfo.modes;
+                            gameGenres.innerHTML = data.gameInfo.genres;
+                            gameThemes.innerHTML = data.gameInfo.themes;
+                            gameRating.innerHTML = data.gameInfo.rating;
+                            gameStory.innerHTML = data.gameInfo.story;
+                            gameSum.innerHTML = data.gameInfo.sum;
+                    });
+                });
+            }
+        }
+
+    </script>
+{% endblock %}
